@@ -500,12 +500,12 @@ std::vector<float> JacobiKokkos(
 |**REF**|**REF**|**0.4723**|**-**|
 |3822B1FI1|rezantseva_anastasia|0.5868|5|
 |3822B1FI1|shurigin_sergey|0.8417|7|
+|3822B1FI3|kolodkin_grigorii|0.8418|2|
 |3822B1FI1|beskhmelnova_kseniya|0.8425|2|
 |3822B1FI1|solovev_alexey|0.8441|4|
 |3822B1FI1|kabalova_valeria|0.8483|1|
 |3822B1FI3|lopatin_ilya|0.9945|1|
 |3822B1FI1|drozhdinov_dmitriy|0.9980|6|
-|3822B1FI3|kolodkin_grigorii|TEST FAILED|-|
 
 ## 3_acc_jacobi_oneapi (4096 elements)
 |Group|Name|Result|Rank|
@@ -567,8 +567,8 @@ Passed: 0
 |Group|Name|Passed|Score|
 |-----|----|------|-----|
 |3822B1FI3|frolova_elizaveta|1/9|61|
-|3822B1FI3|kolodkin_grigorii|1/9|60|
-|3822B1FI3|lopatin_ilya|2/9|127|
+|3822B1FI3|kolodkin_grigorii|2/9|123|
+|3822B1FI3|lopatin_ilya|2/9|126|
 |3822B1FI3|sozonov_ilya|1/9|60|
 
 Passed: 0
