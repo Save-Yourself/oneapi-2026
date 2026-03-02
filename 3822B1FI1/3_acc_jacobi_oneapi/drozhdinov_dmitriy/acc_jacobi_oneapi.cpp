@@ -1,4 +1,4 @@
-#include "jacobi_acc_oneapi.h"
+#include "acc_jacobi_oneapi.h"
 
 std::vector<float> JacobiAccONEAPI(
     const std::vector<float>& a, const std::vector<float>& b,
