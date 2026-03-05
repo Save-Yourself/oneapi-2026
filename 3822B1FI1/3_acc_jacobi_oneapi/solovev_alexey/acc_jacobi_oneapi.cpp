@@ -1,5 +1,6 @@
 #include "acc_jacobi_oneapi.h"
 #include <cmath>
+#include <utility>
 
 std::vector<float> JacobiAccONEAPI(
     const std::vector<float>& a, const std::vector<float>& b,
@@ -14,15 +15,15 @@ std::vector<float> JacobiAccONEAPI(
     sycl::buffer<float> A(a.data(), sycl::range<1>(a.size()));
     sycl::buffer<float> B(b.data(), sycl::range<1>(b.size()));
     sycl::buffer<float> Xcurr(x0.data(), sycl::range<1>(n));
-    sycl::buffer<float> Xnext(sycl::range<1>(n));
-    sycl::buffer<float> Diff(sycl::range<1>(1));
+    sycl::buffer<float> Xnext{sycl::range<1>(n)};
+    sycl::buffer<float> Diff{sycl::range<1>(1)};
 
     for (int iter = 0; iter < ITERATIONS; ++iter) {
 
         q.submit([&](sycl::handler& h) {
             auto d = Diff.get_access<sycl::access::mode::discard_write>(h);
             h.fill(d, 0.0f);
-            });
+        });
 
         q.submit([&](sycl::handler& h) {
             auto a_acc = A.get_access<sycl::access::mode::read>(h);
@@ -40,8 +41,8 @@ std::vector<float> JacobiAccONEAPI(
                         sigma += a_acc[row + j] * x_acc[j];
 
                 xn_acc[i] = (b_acc[i] - sigma) / a_acc[row + i];
-                });
             });
+        });
 
         q.submit([&](sycl::handler& h) {
             auto x_acc = Xcurr.get_access<sycl::access::mode::read>(h);
@@ -54,15 +55,15 @@ std::vector<float> JacobiAccONEAPI(
                     float d = sycl::fabs(xn_acc[id] - x_acc[id]);
                     max_diff.combine(d);
                 });
-            }).wait();
+        }).wait();
 
-            {
-                auto host_diff = Diff.get_host_access();
-                if (host_diff[0] < accuracy)
-                    break;
-            }
+        {
+            auto host_diff = Diff.get_host_access();
+            if (host_diff[0] < accuracy)
+                break;
+        }
 
-            std::swap(Xcurr, Xnext);
+        std::swap(Xcurr, Xnext);
     }
 
     std::vector<float> result(n);
